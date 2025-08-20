@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "Components/StateTreeAIComponent.h"
+#include "AIWorldPerceptionComponent.h"
 #include "BehaviorTree/BlackboardData.h"
 #include "GameplayTagContainer.h"
 #include "AIController_Base.generated.h"
@@ -26,26 +27,42 @@ protected:
 	virtual void OnPossess(APawn* InPawn) override;
 
 public:
-	UFUNCTION(BlueprintCallable)
+	//Goals
+	UFUNCTION(BlueprintCallable, Category = "AI|Goal")
 	void AddGoal(const FGameplayTag& GoalTag);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "AI|Goal")
 	void RemoveGoal(const FGameplayTag& GoalTag);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "AI|Goal")
 	bool HasAllGoals(const FGameplayTagContainer& Goals) const { return ActiveGoals.HasAll(Goals); }
 
+	//States
+	UFUNCTION(BlueprintCallable, Category = "AI|State")
+	void ChangeCurrentState(const FGameplayTag& NewState);
+	UFUNCTION(BlueprintCallable, Category = "AI|State")
+	FGameplayTag GetCurrentState() const { return CurrentState; }
+	UFUNCTION(BlueprintCallable, Category = "AI|State")
+	FGameplayTag GetOldState() const { return OldState; }
+	
 	UFUNCTION(BlueprintCallable)
 	UStateTreeComponent* GetStateTreeComponent() const { return StateTreeComponent.Get(); }
+	UFUNCTION(BlueprintCallable)
+	UAIWorldPerceptionComponent* GetAIWorldPerceptionComponent() const { return AIPerceptionComp.Get(); }
 
 protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStateTreeAIComponent> StateTreeComponent;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UBlackboardData> BlackboardAsset;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UAIWorldPerceptionComponent> AIPerceptionComp;
 
+private:
 	FGameplayTagContainer ActiveGoals; // Goals that are currently active for this AI Controller
-
 	FOnGoalAdded OnGoalAdded; // Delegate called when a goal is added
 	FOnGoalRemoved OnGoalRemoved; // Delegate called when a goal is removed
+
+	FGameplayTag CurrentState;
+	FGameplayTag OldState;
 };

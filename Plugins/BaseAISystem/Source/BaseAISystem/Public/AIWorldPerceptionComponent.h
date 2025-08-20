@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "AIWorldInfoData.h"
 #include "AIWorldPerceptionComponent.generated.h"
 
@@ -25,7 +26,16 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	void InitAllWorldInfoData(UBlackboardComponent* InBlackboardComp);
+	void SetUpWorldInfoData(UAIWorldInfoData* WorldInfoData);
+
+	UFUNCTION(BlueprintCallable, Category = "AI | WorldInfo")
+	void AddWorldInfoData(UAIWorldInfoData* WorldInfoData);
+
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AISystem | WorldInfo")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AISystem | WorldInfo")
+	TArray<TSubclassOf<UAIWorldInfoData>> WorldInfoDataClasses; // Classes of world info data to be used
+
 	TArray<UAIWorldInfoData*> WorldInfoPerceptions;
+	TWeakObjectPtr<UBlackboardComponent> BlackboardComp;
 };

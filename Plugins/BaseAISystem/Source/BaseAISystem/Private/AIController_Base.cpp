@@ -8,6 +8,7 @@ AAIController_Base::AAIController_Base()
 	// Initialize the StateTreeComponent
 	StateTreeComponent = CreateDefaultSubobject<UStateTreeAIComponent>(TEXT("StateTreeComponent"));
 	StateTreeComponent->SetStartLogicAutomatically(false);
+	AIPerceptionComp = CreateDefaultSubobject<UAIWorldPerceptionComponent>(TEXT("AIPerceptionComponent"));
 }
 
 void AAIController_Base::OnPossess(APawn* InPawn)
@@ -16,6 +17,7 @@ void AAIController_Base::OnPossess(APawn* InPawn)
 	UBlackboardComponent* BlackboardComp = Blackboard;
 	UseBlackboard(BlackboardAsset, BlackboardComp);
 	StateTreeComponent->StartLogic();
+	AIPerceptionComp->InitAllWorldInfoData(BlackboardComp); // Set the perception component's blackboard reference
 }
 
 void AAIController_Base::AddGoal(const FGameplayTag& GoalTag)
@@ -35,5 +37,14 @@ void AAIController_Base::RemoveGoal(const FGameplayTag& GoalTag)
 		ActiveGoals.RemoveTag(GoalTag);
 		OnGoalRemoved.Broadcast(GoalTag); // Notify listeners that a goal has been removed
 		// Optionally, you can trigger any event or logic when a goal is removed
+	}
+}
+
+void AAIController_Base::ChangeCurrentState(const FGameplayTag& NewState)
+{
+	if (CurrentState != NewState)
+	{
+		OldState = CurrentState; // Store the old state before changing
+		CurrentState = NewState;
 	}
 }

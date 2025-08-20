@@ -2,6 +2,7 @@
 
 
 #include "AIWorldPerceptionComponent.h"
+#include "AIController.h"
 
 // Sets default values for this component's properties
 UAIWorldPerceptionComponent::UAIWorldPerceptionComponent()
@@ -29,6 +30,50 @@ void UAIWorldPerceptionComponent::TickComponent(float DeltaTime, ELevelTick Tick
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	for (const auto InfoData : WorldInfoPerceptions)
+	{
+		if (InfoData)
+			InfoData->UpdateRemainingTime(DeltaTime);
+	}
 	// ...
+}
+
+void UAIWorldPerceptionComponent::InitAllWorldInfoData(UBlackboardComponent* InBlackboardComp)
+{
+	BlackboardComp = InBlackboardComp;
+	if (WorldInfoDataClasses.IsEmpty())
+		return;
+	for (const auto InfoClass : WorldInfoDataClasses)
+	{
+		if (UAIWorldInfoData* InfoData = NewObject<UAIWorldInfoData>(this, InfoClass))
+			AddWorldInfoData(InfoData);
+	}
+}
+
+void UAIWorldPerceptionComponent::SetUpWorldInfoData(UAIWorldInfoData* WorldInfoData)
+{
+	if (BlackboardComp.IsValid())
+	{
+		if (WorldInfoData)
+		{
+			WorldInfoData->SetBlackboardComponent(BlackboardComp.Get());
+			if (const AAIController* AIController = Cast<AAIController>(GetOwner()))
+			{
+				WorldInfoData->SetOwnerPawn(AIController->GetPawn());
+			}
+		}
+	}
+
+}
+
+void UAIWorldPerceptionComponent::AddWorldInfoData(UAIWorldInfoData* WorldInfoData)
+{
+	if (WorldInfoData)
+	{
+		WorldInfoPerceptions.Add(WorldInfoData);
+		SetUpWorldInfoData(WorldInfoData);
+	}
+	else
+		UE_LOG(LogTemp, Warning, TEXT("UAIWorldPerceptionComponent::AddWorldInfoData - WorldInfoData is null!"));
 }
 
