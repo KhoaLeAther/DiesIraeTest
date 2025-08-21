@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "DiesIrae/DiesIraeCharacter.h"
+#include "DiesIrae/UI/DiesIraeHUD.h"
 #include "DiesIraeCharacter_Player.generated.h"
 
 /**
@@ -37,11 +38,12 @@ class DIESIRAE_API ADiesIraeCharacter_Player : public ADiesIraeCharacter
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
+
 public:
 	/** Standard constructor, called after all reflected properties have been initialized */
 	ADiesIraeCharacter_Player(const class FObjectInitializer& ObjectInitializer);
-protected:
 
+protected:
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
@@ -76,7 +78,14 @@ protected:
 	FDelegateHandle ExpChangedDelegateHandle;
 	FDelegateHandle MaxExpChangedDelegateHandle;
 
+	virtual void HealthChanged(const FOnAttributeChangeData& Data) override;
 	virtual void LevelChanged(const FOnAttributeChangeData& Data);
 	virtual void ExpChanged(const FOnAttributeChangeData& Data);
 	virtual void MaxExpChanged(const FOnAttributeChangeData& Data);
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "DiesIrae|HUD")
+	TSubclassOf<UDiesIraeHUD> DiesIraeHUDClass;
+
+	TWeakObjectPtr<UDiesIraeHUD> DiesIraeHUD;
 };

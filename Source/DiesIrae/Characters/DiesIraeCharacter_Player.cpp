@@ -52,6 +52,13 @@ void ADiesIraeCharacter_Player::BeginPlay()
 	}
 
 	SetLevel(1); // Initialize character level to 1 or load save here
+
+	DiesIraeHUD = CreateWidget<UDiesIraeHUD>(GetWorld(), DiesIraeHUDClass);
+	if (DiesIraeHUD.IsValid())
+	{
+		DiesIraeHUD->AddToViewport();
+		DiesIraeHUD->InitializeHUD();
+	}
 }
 
 void ADiesIraeCharacter_Player::NotifyControllerChanged()
@@ -129,6 +136,14 @@ float ADiesIraeCharacter_Player::GetMaxExp() const
 	}
 
 	return 0.0f;
+}
+
+void ADiesIraeCharacter_Player::HealthChanged(const FOnAttributeChangeData& Data)
+{
+	if (DiesIraeHUD.IsValid())
+	{
+		DiesIraeHUD->UpdatePlayerHealth(Data.NewValue / GetMaxHealth());
+	}
 }
 
 void ADiesIraeCharacter_Player::LevelChanged(const FOnAttributeChangeData& Data)
