@@ -28,7 +28,8 @@ public class BaseAISystem : ModuleRules
 				"Core",
 				"AIModule",
                 "GameplayTags",
-                "GameplayStateTreeModule"
+                "GameplayStateTreeModule",
+                "GameplayAbilities", "GameplayTags", "GameplayTasks"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

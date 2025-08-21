@@ -9,6 +9,6 @@ public class DiesIrae : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", 
-			"GameplayAbilities", "GameplayTags", "GameplayTasks", "BaseGameplayAbilitySystem"});
+			"GameplayAbilities", "GameplayTags", "GameplayTasks", "BaseGameplayAbilitySystem", "BaseAISystem"});
 	}
 }

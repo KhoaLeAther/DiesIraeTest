@@ -36,6 +36,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AISystem | WorldInfo")
 	TArray<TSubclassOf<UAIWorldInfoData>> WorldInfoDataClasses; // Classes of world info data to be used
 
+	UPROPERTY()
 	TArray<UAIWorldInfoData*> WorldInfoPerceptions;
 	TWeakObjectPtr<UBlackboardComponent> BlackboardComp;
 };

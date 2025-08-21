@@ -32,7 +32,7 @@ void UAIWorldPerceptionComponent::TickComponent(float DeltaTime, ELevelTick Tick
 
 	for (const auto InfoData : WorldInfoPerceptions)
 	{
-		if (InfoData)
+		if (IsValid(InfoData))
 			InfoData->UpdateRemainingTime(DeltaTime);
 	}
 	// ...
